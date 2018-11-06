@@ -3,6 +3,7 @@
 using namespace std;
 using namespace cv;
 
+// Load the image
 cv::Mat image_inout::image_load()
 {
 	std::cout << "Loading image from " << img_path << endl;
@@ -11,6 +12,7 @@ cv::Mat image_inout::image_load()
 	return img_in;
 }
 
+// Load the correspond feature.txt
 std::vector<Location_fea> image_inout::image_features_load()
 {
 	std::vector<Location_fea> fea_data;
@@ -27,20 +29,21 @@ std::vector<Location_fea> image_inout::image_features_load()
 		while (!fea_load.eof())
 		{
 			Location_fea fea_point;
-			fea_load >> fea_point.loc_x;
 			fea_load >> fea_point.loc_y;
+			fea_load >> fea_point.loc_x;
 			fea_data.push_back(fea_point);
 			num++;
 			// cout << "Input:: " << num << fea_point.loc_x << ' ' << fea_point.loc_y << endl;
 		}
 		fea_load.close();
+		fea_data.pop_back(); // Seems to have a problem of reloading the final line.
 		std::cout << "Successfully load " << num << "points" << endl;
 	}
 	else std::cout << "Fail to load image features";
-	fea_data.pop_back(); // Seems to have a problem of reloading the final line.
 	return fea_data;
 }
 
+// Save the img_altered with a new file name
 void image_inout::image_save(cv::Mat img_save)
 {
 	cv::String img_save_path = img_name + "_altered.jpg";

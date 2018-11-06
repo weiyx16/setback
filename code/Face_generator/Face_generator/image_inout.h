@@ -12,10 +12,11 @@
 using namespace std;
 using namespace cv;
 
+// In the feature file given: y(column) first then the x(row)
 struct Location_fea
 {
-	float loc_x;
 	float loc_y;
+	float loc_x;
 };
 
 class image_inout
@@ -33,8 +34,5 @@ private:
 	std::size_t type_loc = 0;
 	std::string img_name = "no_img";
 };
-
-
-
 
 #endif // !IMAGE_INOUT.h

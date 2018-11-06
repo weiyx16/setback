@@ -1,44 +1,45 @@
 #include "image_inout.h"
-#include <iostream>
-#include <Eigen/Dense> 
 
 using namespace std;
 using namespace cv;
-using namespace Eigen;
 
 void main() {
 
-	// Load image with its features;
-	cv::String img_path = "D:\\ATsinghua\\value_analysis\\picture\\1.jpg";
-	image_inout img_io(img_path);
+	// Load source image with its features;
+	cv::String img_path_s = "D:\\value_analysis\\picture\\1.jpg";
+	// New a object to load the image;
+	image_inout img_io_s(img_path_s);
 
-	cv::Mat img_ori = img_io.image_load();
-	std::vector<Location_fea> img_fea = img_io.image_features_load();
-	cv::namedWindow("The origin image");
-	cv::imshow("The origin image", img_ori);
+	// Load the img to Mat type
+	cv::Mat img_s = img_io_s.image_load();
+	// Load the correspond image
+	std::vector<Location_fea> img_fea_s = img_io_s.image_features_load();
+
+	// We can show the source_image here;
+	/*
+	cv::namedWindow("The source image");
+	cv::imshow("The source image", img_s);
 	waitKey(3000);
+	*/
+
+	// Load target image with its features;
+	cv::String img_path_t = "D:\\value_analysis\\picture\\2.jpg";
+	// New a object to load the image;
+	image_inout img_io_t(img_path_t);
+
+	// Load the img to Mat type
+	cv::Mat img_t = img_io_t.image_load();
+	// Load the correspond image
+	std::vector<Location_fea> img_fea_t = img_io_t.image_features_load();
+
+	// We can show the target_image here;
+	/*
+	cv::namedWindow("The target image");
+	cv::imshow("The target image", img_t);
+	waitKey(3000);
+	*/
 
 	// Save the altered image;
-	img_io.image_save(img_ori);
+	// img_io_s.image_save(img_ori);
 
-	/* ---- how to use Eigen
-	Eigen::Matrix2d a;
-	a << 1, 2,
-		3, 4;
-
-	Eigen::MatrixXd b(2, 2);
-	b << 2, 3,
-		1, 4;
-
-	std::cout << "a + b =\n" << a + b << std::endl;
-	std::cout << "a - b =\n" << a - b << std::endl;
-	std::cout << "Doing a += b;" << std::endl;
-	a += b;
-	std::cout << "Now a =\n" << a << std::endl;
-
-	Eigen::Vector3d v(1, 2, 3);
-	Eigen::Vector3d w(1, 0, 0);
-
-	std::cout << "-v + w - v =\n" << -v + w - v << std::endl;
-	*/
 }
