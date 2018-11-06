@@ -15,8 +15,8 @@ using namespace cv;
 // In the feature file given: y(column) first then the x(row)
 struct Location_fea
 {
-	float loc_y;
 	float loc_x;
+	float loc_y;
 };
 
 class image_inout
