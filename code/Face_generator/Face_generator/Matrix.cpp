@@ -82,7 +82,7 @@ void Matrix::Mat_col_concat(std::vector<vector<double>> Mat_concat)
 	}
 }
 
-//TODO
+//Get the Gauss-eliminated generalized matrix 
 std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 {
 	double m = 0;
@@ -96,60 +96,75 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 	for (int i = 0; i < rows; i++) {
 		Mat_data_general[i].push_back(Mat_b[i]);
 	}
-
+	
+	//Create a new A in AX=B
 	for (int i = 0; i < rows; i++) {
 		change_rows(i);
 		if (Mat_data_general[i][i] != 0) {
+			// Use Gauss to solve the problem by eliminate the elements 
+			// I is the current row
 			for (int j = i + 1; j<rows; j++) {
 				//m = 1;
 				if (Mat_data_general[j][i] == 0)
 					continue;
 				m = abs(1.0 * Mat_data_general[i][i] / Mat_data_general[j][i]);
 
-				if ((Mat_data_general[j][i] > 0 && Mat_data_general[i][i] > 0) || (Mat_data_general[j][i] < 0 && Mat_data_general[i][i] < 0)) {
-					flag = 1;
-				}
-				else{
-					flag = -1;
-				}
+				if (Mat_data_general[j][i]*Mat_data_general[i][i] > 0) flag = 1;
+				else flag = -1;
+				
 				for (int k = i; k<cols; k++) {
 					Mat_data_general[j][k] = Mat_data_general[j][k] * m - flag*Mat_data_general[i][k];
 				}
+				// directly get the notion?
+				/*
+				m = 1.0 * Mat_data_general[i][i] / Mat_data_general[j][i];				
+				for (int k = i; k<cols; k++) {
+					Mat_data_general[j][k] = Mat_data_general[i][k] - Mat_data_general[j][k] * m ;
+				}
+				*/
 			}
 		}
 	}
 
 	std::vector<double> ans;
-	double sum = 0;
+	double B = 0;
 
-	for (int i = 1; i < cols; i++) {
-		sum = Mat_data_general[cols - 1 - i][cols - 1];
-		for (int j = 1; j < i; j++) {
-			sum -= ans[cols - j] * Mat_data_general[rows - i][rows - j];
+	for (int i = cols - 1; i > -1; i--) {
+		B = Mat_data_general[i][cols - 1];
+		for (int j = rows; j > i; j--) {
+			B -= ans[j] * Mat_data_general[i][j];
 		}
-		ans[cols - i] = sum / Mat_data_general[cols - 1 - i][cols - 1 - i];
+		ans[i] = B / Mat_data_general[i][i];
 	}
 	return ans;
 }
 
-void Matrix::change_rows(int x) {
+void Matrix::change_rows(int row_ind) {
 	double temp = 0;
 	int rows = Mat_data_general.size();
 	int cols = rows + 1;
-	double max = abs(Mat_data_general[x][x]);
-	int loc = x;
-	for (int i = x; i < rows; i++) {
-		if (abs(Mat_data_general[i][x]) > max) {
-			max = abs(Mat_data_general[i][x]);
-			loc = i;
+	double max = abs(Mat_data_general[row_ind][row_ind]);
+	
+	// find the max num index in this row=col
+	// save the index in the max_ind > row_ind
+	int max_ind = row_ind;
+	for (int i = row_ind; i < rows; i++) {
+		if (abs(Mat_data_general[i][row_ind]) > max) {
+			max = abs(Mat_data_general[i][row_ind]);
+			max_ind = i;
 		}
 	}
-	if (x != loc) {
-		for (int i = x; i < cols; i++) {
-			temp = Mat_data_general[x][i];
-			Mat_data_general[x][i] = Mat_data_general[loc][i];
-			Mat_data_general[loc][i] = temp;
-		}
+	
+	// If it is in the another row, please swap them
+	if (row_ind != max_ind) {
+		swap(Mat_data_general[max_ind],Mat_data_general[row_ind]);
+		/* 		
+		// do not change the zero elements in the columns before
+		for (int i = row_ind; i < cols; i++) {
+			temp = Mat_data_general[row_ind][i];
+			Mat_data_general[row_ind][i] = Mat_data_general[max_ind][i];
+			Mat_data_general[max_ind][i] = temp;
+		} */
 	}
 }
 
