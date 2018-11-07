@@ -103,7 +103,8 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 		if (Mat_data_general[i][i] != 0) {
 			// Use Gauss to solve the problem by eliminate the elements 
 			// I is the current row
-			for (int j = i + 1; j<rows; j++) {
+			// J is the next rows
+			for (int j = i + 1; j < rows; j++) {
 				//m = 1;
 				if (Mat_data_general[j][i] == 0)
 					continue;
@@ -112,7 +113,7 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 				if (Mat_data_general[j][i]*Mat_data_general[i][i] > 0) flag = 1;
 				else flag = -1;
 				
-				for (int k = i; k<cols; k++) {
+				for (int k = i; k < cols; k++) {
 					Mat_data_general[j][k] = Mat_data_general[j][k] * m - flag*Mat_data_general[i][k];
 				}
 				// directly get the notion?
@@ -127,14 +128,17 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 	}
 
 	std::vector<double> ans;
+	for (int i = 0; i < rows; i++) {
+		ans.push_back(0.0);
+	}
 	double B = 0;
 
-	for (int i = cols - 1; i > -1; i--) {
-		B = Mat_data_general[i][cols - 1];
-		for (int j = rows; j > i; j--) {
+	for (int i = 0; i < rows; i++) {
+		B = Mat_data_general[rows - 1 - i][cols - 1];
+		for (int j = rows - i; j < cols - 1; j++) {
 			B -= ans[j] * Mat_data_general[i][j];
 		}
-		ans[i] = B / Mat_data_general[i][i];
+		ans[rows - 1 - i] = B / Mat_data_general[rows - 1 - i][rows - 1 - i];
 	}
 	return ans;
 }
@@ -168,10 +172,33 @@ void Matrix::change_rows(int row_ind) {
 	}
 }
 
-//TODO
+// Matrix multiply especially for 2*71 * 71*1
 std::vector<vector<double>> Matrix::Mat_mul(std::vector<vector<double>> Mat_right)
 {
-	return std::vector<vector<double>>();
+	int output_rows = Mat_data.size();
+	int output_cols = Mat_right[0].size();
+	int multi_num = Mat_right.size();
+
+	if (multi_num != Mat_data[0].size()){
+		std::cout << "Unvalid input: Unpaired matrix dimension" << endl;
+		return std::vector<vector<double>>();
+	}
+
+	std::vector<vector<double>> multi_ans;
+
+	for (int i = 0; i < output_rows; i++) {
+		std::vector<double> row_ans;
+		for (int j = 0; j < output_cols; j++) {
+			double sum = 0;
+			std::vector<double> i_rows = Mat_data[i];
+			for (int k = 0; k < multi_num; k++) {
+				sum += i_rows[k] * Mat_right[k][j];
+			}
+			row_ans.push_back(sum);
+		}
+		multi_ans.push_back(row_ans);
+	}
+	return multi_ans;
 }
 
 std::vector<vector<double>> Matrix::Mat_return()
@@ -181,7 +208,7 @@ std::vector<vector<double>> Matrix::Mat_return()
 
 double Matrix::U_calcu(double r2)
 {
-	if (abs(r2) < 0.00001) {
+	if (abs(r2) < 0.0001) {
 		return 0.0;
 	}
 	else {
@@ -208,7 +235,7 @@ void Matrix::stdFea2U(std::vector<Location_fea> fea_vector)
 		for (int j=0; j<point_num; j++){
 			double x_j = fea_temp[j][0];
 			double y_j = fea_temp[j][1];
-			double U = U_calcu(pow(x_i- x_j,2)+pow(y_i - y_j,2));
+			double U = U_calcu(double(pow(x_i - x_j,2)+pow(y_i - y_j,2)));
 			temp.push_back(U);
 		}
 		Mat_data.push_back(temp);
