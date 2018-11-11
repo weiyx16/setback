@@ -17,9 +17,9 @@ public:
 	void Mat_set(const std::vector<vector<double>> Mat_input);
 	void stdFea2U(std::vector<Location_fea> fea_vector);
 
-	void Mat_inv();
 	void Mat_row_concat(std::vector<vector<double>> Mat_concat);
 	void Mat_col_concat(std::vector<vector<double>> Mat_concat);
+	void Mat_show();
 
 	std::vector<double> Mat_solve(std::vector<double> Mat_b);
 	

@@ -7,7 +7,7 @@ using namespace cv;
 cv::Mat image_inout::image_load()
 {
 	std::cout << "Loading image from " << img_path << endl;
-	Mat img_in = cv::imread(img_path, 1);
+	Mat img_in = cv::imread(img_path, IMREAD_COLOR);
 	std::cout << "Finished loading" << endl;
 	return img_in;
 }
@@ -37,7 +37,7 @@ std::vector<Location_fea> image_inout::image_features_load()
 		}
 		fea_load.close();
 		fea_data.pop_back(); // Seems to have a problem of reloading the final line.
-		std::cout << "Successfully load " << num << "points" << endl;
+		std::cout << "Successfully load " << num-1 << " points" << endl;
 	}
 	else std::cout << "Fail to load image features";
 	return fea_data;

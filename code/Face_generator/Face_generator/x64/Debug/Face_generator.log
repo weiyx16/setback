@@ -1,4 +1,31 @@
-﻿  main.cpp
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets(76,5): warning : 文件“d:\value_analysis\code\face_generator\face_generator\x64\debug\main.obj”正由另一进程使用，因此该进程无法访问此文件。
+  Utils.cpp
+d:\value_analysis\code\face_generator\face_generator\utils.cpp(12): warning C4804: “<”: 在操作中使用类型“bool”不安全
+  Matrix.cpp
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(15): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(40): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(63): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(72): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(73): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(83): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(84): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(99): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(157): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(187): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(188): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(189): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\matrix.cpp(230): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  main.cpp
+d:\value_analysis\code\face_generator\face_generator\main.cpp(94): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(129): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(164): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(166): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(196): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(197): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(198): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(199): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(258): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+d:\value_analysis\code\face_generator\face_generator\main.cpp(260): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
   image_inout.cpp
   正在生成代码...
   Face_generator.vcxproj -> D:\value_analysis\code\Face_generator\x64\Debug\Face_generator.exe

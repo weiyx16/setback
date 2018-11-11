@@ -10,7 +10,7 @@ void Matrix::cvMat2stdMat(cv::Mat img_mat)
 }
 
 // 68*3 or 68*2
-void Matrix::stdFea2stdMat_v(std::vector<Location_fea> fea_vector, int with_one = 1)
+void Matrix::stdFea2stdMat_v(std::vector<Location_fea> fea_vector, int with_one)
 {
 	int point_num = fea_vector.size();
 	if (with_one == 1){
@@ -57,10 +57,6 @@ void Matrix::Mat_set(const std::vector<vector<double>> Mat_input)
 	Mat_data = Mat_input;
 }
 
-//TODO
-void Matrix::Mat_inv()
-{ }
-
 // concatenation in the row
 void Matrix::Mat_row_concat(std::vector<vector<double>> Mat_concat)
 {
@@ -80,6 +76,19 @@ void Matrix::Mat_col_concat(std::vector<vector<double>> Mat_concat)
 			Mat_data[i].push_back(Mat_concat[i][j]);
 		}
 	}
+}
+
+void Matrix::Mat_show()
+{
+	int rows = Mat_data.size();
+	int cols = Mat_data[0].size();
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			cout << Mat_data[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
 }
 
 //Get the Gauss-eliminated generalized matrix 
@@ -136,7 +145,7 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 	for (int i = 0; i < rows; i++) {
 		B = Mat_data_general[rows - 1 - i][cols - 1];
 		for (int j = rows - i; j < cols - 1; j++) {
-			B -= ans[j] * Mat_data_general[i][j];
+			B -= ans[j] * Mat_data_general[rows - 1 - i][j];
 		}
 		ans[rows - 1 - i] = B / Mat_data_general[rows - 1 - i][rows - 1 - i];
 	}
@@ -219,7 +228,7 @@ double Matrix::U_calcu(double r2)
 void Matrix::stdFea2U(std::vector<Location_fea> fea_vector)
 {
 	int point_num = fea_vector.size();
-	std::vector<vector<double>> fea_temp;
+	std::vector<vector<double>> fea_temp; // 68*2
 	for (int i=0; i<point_num; i++){
 		std::vector<double> temp;
 		Location_fea fea = fea_vector[i];

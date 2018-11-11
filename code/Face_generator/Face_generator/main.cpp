@@ -1,20 +1,25 @@
 #include "image_inout.h"
 #include "Matrix.h"
+#include "Utils.h"
 #include <math.h>
+#include <time.h>
 
 using namespace std;
 using namespace cv;
 
 int main() {
 
+	time_t timeBegin, timeEnd;
+	timeBegin = time(NULL);
+	
 	// Load source image with its features;
 	cv::String img_path_s = "D:\\value_analysis\\picture\\1.jpg";
 	// New a object to load the image;
-	image_inout img_io_s(img_path_s);
+	image_inout img_io_s(img_path_s); 
 
 	// Load the img to Mat type
-	cv::Mat img_s = img_io_s.image_load();
-	// Load the correspond image
+	cv::Mat img_s = img_io_s.image_load();//type = CV_8U_C3
+	// Load the correspond image feature
 	std::vector<Location_fea> img_fea_s = img_io_s.image_features_load();
 
 	// We can show the source_image here;
@@ -31,7 +36,7 @@ int main() {
 
 	// Load the img to Mat type
 	cv::Mat img_t = img_io_t.image_load();
-	// Load the correspond image
+	// Load the correspond image feature
 	std::vector<Location_fea> img_fea_t = img_io_t.image_features_load();
 
 	// We can show the target_image here;
@@ -49,7 +54,7 @@ int main() {
 	Mat_Fea_t_v.stdFea2stdMat_v(img_fea_t, 1);
 	Matrix Mat_Fea_t_h;
 	Mat_Fea_t_h.stdFea2stdMat_h(img_fea_t);
-	std:;vector<vector<double>> Mat_Fea_t = Mat_Fea_t_h.Mat_return(); //2*68
+	std::vector<vector<double>> Mat_Fea_t = Mat_Fea_t_h.Mat_return(); //2*68
 	vector<vector<double>> one_matrix;
 	for (int i = 0; i < 3; i++) {
 		vector<double> temp;
@@ -62,25 +67,24 @@ int main() {
 	Mat_L_t.Mat_col_concat(Mat_Fea_t_v.Mat_return());
 	Mat_Fea_t_h.Mat_col_concat(one_matrix);
 	Mat_L_t.Mat_row_concat(Mat_Fea_t_h.Mat_return());
-	
+
 	// Create the Matrix of Y 71*2
 	Matrix Mat_Fea_s_v;
 	Mat_Fea_s_v.stdFea2stdMat_v(img_fea_s, 0);
-	vector<vector<double>> one_matrix;
+	vector<vector<double>> one_matrix_32;
 	for (int i = 0; i < 3; i++) {
 		vector<double> temp;
 		for (int j = 0; j < 2; j++) {
 			temp.push_back(0.0);
 		}
-		one_matrix.push_back(temp);
+		one_matrix_32.push_back(temp);
 	}
-	Mat_Fea_s_v.Mat_row_concat(one_matrix);
+	Mat_Fea_s_v.Mat_row_concat(one_matrix_32);
+
+	//-----------2018.11.11 22:37 before here: right
 
 
 	// Calculate the inverse of L to get paras
-	// Mat_L_t.Mat_inv();
-	// vector<vector<double>> paras;
-	// paras = Mat_L_t.Mat_mul(Mat_Fea_s_v.Mat_return());
 
 	// Choose to directly solve the formula
 	std::vector<double> paras_1; // 1*71
@@ -106,12 +110,14 @@ int main() {
 	Matrix Mat_paras;
 	Mat_paras.Mat_set(paras); //2*71
 
+	//-----------2018.11.11 22:13 before here: right
+
 	int height_t = img_t.size().height;
 	int width_t = img_t.size().width;
 	int height_s = img_s.size().height;
 	int width_s = img_s.size().width;
 
-	enum inter_kind { nearest, bilinear, bicubic }inter_input = nearest;
+	enum inter_kind { nearest, bilinear, bicubic }inter_input = bicubic;
 	if (inter_input != nearest&&inter_input != bilinear&&inter_input != bicubic) {
 		std::cout << "Please input one kind of valid way for interpolate" << endl;
 		std::cout << "Possible choice: nearest, bilinear, bicubic" << endl;
@@ -121,12 +127,17 @@ int main() {
 	// Multiply the paras and locs to find the correspond location in source images
 	int fea_num = Mat_Fea_t[0].size();
 	for (int loc_i = 0; loc_i < height_t; loc_i++) {
+
 		for (int loc_j = 0; loc_j < width_t; loc_j++) {
+			if (loc_i % 100 == 0 && loc_j % 100 == 0) {
+				cout << "At " << loc_i << " and " << loc_j << endl;
+			}
+
 			// k<68 for every U(x,y)
 			std::vector<vector<double>> loc;
 			for (int k = 0; k < fea_num; k++) {
-				int loc_x = Mat_Fea_t[1][k];
-				int loc_y = Mat_Fea_t[2][k];
+				double loc_x = Mat_Fea_t[1][k];
+				double loc_y = Mat_Fea_t[2][k];
 				double r2 = pow(loc_x - loc_i, 2) + pow(loc_y - loc_j, 2);
 				double U_r2 = r2*log(r2);
 				std::vector<double> temp;
@@ -149,16 +160,21 @@ int main() {
 				case nearest: {
 					int loc_x = 0;
 					int loc_y = 0;
-					if (loc_x_double >= 0) (loc_x_double - floor(loc_x_double)) > 0.5 ? loc_x = floor(loc_x_double) : loc_x = floor(loc_x_double) + 1;
+					if (loc_x_double >= 0 && loc_x_double <= height_t + 1) (loc_x_double - floor(loc_x_double)) > 0.5 ? loc_x = floor(loc_x_double) : loc_x = floor(loc_x_double) + 1;
 					else loc_x = -1;
-					if (loc_y_double >= 0) (loc_y_double - floor(loc_y_double)) > 0.5 ? loc_y = floor(loc_y_double) : loc_y = floor(loc_y_double) + 1;
+					if (loc_y_double >= 0 && loc_y_double <= width_t + 1) (loc_y_double - floor(loc_y_double)) > 0.5 ? loc_y = floor(loc_y_double) : loc_y = floor(loc_y_double) + 1;
 					else loc_y = -1;
 
 					if (loc_x > height_s - 1 || loc_x < 0 || loc_y > width_s - 1 || loc_y < 0) {
+						cv::Vec3b black = cv::Vec3b(0,0,0);
+						//char black[3] = {0, 0, 0};
+						img_t.at<Vec3b>(loc_i, loc_j) = black;
 						// value = [0,0,0]
 
 					}
 					else {
+						//cv::Vec3d value = img_s.at<Vec3d>(loc_x, loc_y);
+						img_t.at<Vec3b>(loc_i, loc_j) = img_s.at<Vec3b>(loc_x, loc_y);// value;
 						// value = [loc_x][loc_y]
 
 					}
@@ -167,18 +183,27 @@ int main() {
 				}
 				case bilinear: {
 					if (loc_x_double >= 0 && loc_x_double < height_s - 1 && loc_y_double >= 0 && loc_y_double < width_s - 1) {
-						int loc_x_1 = floor(loc_x_double);
-						double delta_x_1 = loc_x_double - double(loc_x_1);
-						int loc_y_1 = floor(loc_y_double);
-						double delta_y_1 = loc_y_double - double(loc_y_1);
-						int loc_x_2 = floor(loc_x_double) + 1;
+						double loc_x_1 = floor(loc_x_double);
+						double delta_x_1 = loc_x_double - loc_x_1;
+						double loc_y_1 = floor(loc_y_double);
+						double delta_y_1 = loc_y_double - loc_y_1;
+						double loc_x_2 = floor(loc_x_double) + 1;
 						double delta_x_2 = 1 - delta_x_1;
-						int loc_y_2 = floor(loc_y_double) + 1;
+						double loc_y_2 = floor(loc_y_double) + 1;
 						double delta_y_2 = 1 - delta_y_1;
+
+						cv::Vec3b value_1 = img_s.at<Vec3b>(loc_x_1, loc_y_1);
+						cv::Vec3b value_2 = img_s.at<Vec3b>(loc_x_2, loc_y_1);
+						cv::Vec3b value_3 = img_s.at<Vec3b>(loc_x_1, loc_y_2);
+						cv::Vec3b value_4 = img_s.at<Vec3b>(loc_x_2, loc_y_2);
+						img_t.at<Vec3b>(loc_i, loc_j) = delta_x_2*delta_y_2*value_1 + delta_x_1*delta_y_2*value_2 + delta_x_2*delta_y_1*value_3 + delta_x_1*delta_y_1*value_4;
+
 						// value = delta_x_2*delta_y_2*[loc_x_1][loc_y_1] + delta_x_1*delta_y_2*[loc_x_2][loc_y_1] + 
 						// delta_x_2*delta_y_1*[loc_x_1][loc_y_2] + delta_x_1*delta_y_1*[loc_x_2][loc_y_2];
 					}
 					else {
+						cv::Vec3b black = cv::Vec3b(0, 0, 0);
+						img_t.at<Vec3b>(loc_i, loc_j) = black;
 						// value = [0,0,0]
 					}
 					break;
@@ -187,35 +212,40 @@ int main() {
 					// Do not interpolate at the corner of the image for lacking of confident points
 					if (loc_x_double >= 1 && loc_x_double < height_s - 2 && loc_y_double >= 1 && loc_y_double < width_s -2) {
 						std::vector<int> loc_x;
-						int loc_x_1 = floor(loc_x_double) - 1; loc_x.push_back(loc_x_1);
-						int loc_x_2 = loc_x_1 + 1; loc_x.push_back(loc_x_2);
-						int loc_x_3 = loc_x_2 + 1; loc_x.push_back(loc_x_3);
-						int loc_x_4 = loc_x_3 + 1; loc_x.push_back(loc_x_4);
+						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
+							loc_x.push_back(int(floor(loc_x_double)) + loc_tem);
+						}
+
 						std::vector<int> loc_y;
-						int loc_y_1 = floor(loc_y_double) - 1; loc_x.push_back(loc_y_1);
-						int loc_y_2 = loc_y_1 + 1; loc_x.push_back(loc_y_2);
-						int loc_y_3 = loc_y_2 + 1; loc_x.push_back(loc_y_3);
-						int loc_y_4 = loc_y_3 + 1; loc_x.push_back(loc_y_4);
+						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
+							loc_y.push_back(int(floor(loc_y_double)) + loc_tem);
+						}
 
 						std::vector<double> delta_x;
-						double delta_x_1 = loc_x_double - double(floor(loc_x_double)) + 1; delta_x.push_back(bicubic_weight(delta_x_1));
-						double delta_x_2 = delta_x_1 - 1; delta_x.push_back(bicubic_weight(delta_x_2));
-						double delta_x_3 = delta_x_2 - 1; delta_x.push_back(bicubic_weight(delta_x_3));
-						double delta_x_4 = delta_x_3 - 1; delta_x.push_back(bicubic_weight(delta_x_4));
+						double temp_x = loc_x_double - double(floor(loc_x_double));
+						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
+							delta_x.push_back(bicubic_weight(double(temp_x - loc_tem)));
+						}
 						
 						std::vector<double> delta_y;
-						double delta_y_1 = loc_y_double - double(floor(loc_y_double)) + 1; delta_y.push_back(bicubic_weight(delta_y_1));
-						double delta_y_2 = delta_y_1 - 1; delta_y.push_back(bicubic_weight(delta_y_2));
-						double delta_y_3 = delta_y_2 - 1; delta_y.push_back(bicubic_weight(delta_y_3));
-						double delta_y_4 = delta_y_3 - 1; delta_y.push_back(bicubic_weight(delta_y_4));
+						double temp_y = loc_y_double - double(floor(loc_y_double));
+						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
+							delta_y.push_back(bicubic_weight(double(temp_y - loc_tem)));
+						}
 
+						cv::Vec3b value = Vec3b(0,0,0);
 						for (int si = 0; si < 4; si++) {
 							for (int sj = 0; sj < 4; sj++) {
+								cv::Vec3b value_temp = img_s.at<Vec3b>(loc_x[si],loc_y[sj]);
+								value += delta_x[si] * delta_y[sj] * value_temp;
 								// value[i,j] = delta_x[si]*delta_y[sj]*value[loc_x[si],loc_y[sj]];
 							}
 						}
+						img_t.at<Vec3b>(loc_i, loc_j) = value;
 					}
 					else {
+						cv::Vec3b black = cv::Vec3b(0, 0, 0);
+						img_t.at<Vec3b>(loc_i, loc_j) = black;
 						// value = [0,0,0]
 					}
 					break;
@@ -230,10 +260,14 @@ int main() {
 					else loc_y = -1;
 
 					if (loc_x > height_s - 1 || loc_x < 0 || loc_y > width_s - 1 || loc_y < 0) {
+						cv::Vec3b black = cv::Vec3b(0, 0, 0);
+						img_t.at<Vec3b>(loc_i, loc_j) = black;
 						// value = [0,0,0]
 
 					}
 					else {
+						cv::Vec3b value = img_s.at<Vec3b>(loc_x, loc_y);
+						img_t.at<Vec3b>(loc_i, loc_j) = value;
 						// value = [loc_x][loc_y]
 
 					}
@@ -243,27 +277,16 @@ int main() {
 		}
 	}
 
+	timeEnd = time(NULL);
+	cout << "The total process time: " << timeEnd - timeBegin << endl;
 
-	// Save the altered image;
-	// img_io_s.image_save(img_ori);
 	// We can show the altered_image here;
-	/*
+
 	cv::namedWindow("The new image");
 	cv::imshow("The new image", img_t);
 	waitKey(3000);
-	*/
-}
 
+	// Save the altered image;
+	img_io_s.image_save(img_t);
 
-double bicubic_weight(double distance) {
-	distance = abs(distance);
-	if (distance <= 1) {
-		return 1.0 - 2.0*pow(distance, 2.0) + pow(distance, 3.0);
-	}
-	else {
-		if (1 < distance < 2) {
-			return 4.0 - 8 * distance + 5 * pow(distance, 2.0) - pow(distance, 3.0);
-		}
-		else return 0.0;
-	}
 }
