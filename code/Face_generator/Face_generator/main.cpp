@@ -7,13 +7,85 @@
 using namespace std;
 using namespace cv;
 
-int main() {
+int main(int argc, char* argv[]) {
 
+	/*Output the help info*/
+	if (argc == 2) {
+		std::string help = argv[1];
+		std::string help_ = "-h";
+		if (!help.compare(help_)) {
+			std::cout << "Please input four parameters." << endl;
+			std::cout << "Including source image path, target image path, interpolate methods and warp methods" << endl;
+			std::cout << "Use absolute path please" << endl;
+			std::cout << "Possible interpolate choice: nearest, bilinear, bicubic" << endl;
+			std::cout << "Possible warp choice: TPS,BS" << endl;
+			std::cout << "E.g. D:\\1.jpg D:\\2.jpg bicubic TPS" << endl;
+			return -1;
+		}
+		else {
+			std::cout << "Unvalid input! Try -h please" << endl;
+			return -1;
+		}
+	}
+
+	/*Read parameters from command*/
+	if (argc != 5) {
+		std::cout << "Please input enough parameters" << endl;
+		return -1;
+	}
+
+	std::string img_source_path = argv[1];
+	std::string img_target_path = argv[2];
+	std::string interpolate = argv[3];
+	std::string warping = argv[4];
+
+	/*Interpolate method and wrap method choice*/
+	enum inter_kind { nearest, bilinear, bicubic }inter_input = nearest;
+	std::string n = "nearest";
+	std::string l = "bilinear";
+	std::string c = "bicubic";
+	if (!interpolate.compare(n)) {
+		inter_input = nearest;
+	}
+	else {
+		if (!interpolate.compare(l)) {
+			inter_input = bilinear;
+		}
+		else {
+			if (!interpolate.compare(c)) {
+				inter_input = bicubic;
+			}
+			else {
+				std::cout << "Please input one kind of valid way for interpolate" << endl;
+				std::cout << "Possible choice: nearest, bilinear, bicubic" << endl;
+				return -1;
+			}
+		}
+	}
+
+	enum warp_kind {TPS, BS}warp_input = TPS;
+	std::string t = "TPS";
+	std::string b = "BS";
+	if (!warping.compare(t)) {
+		warp_input = TPS;
+	}
+	else {
+		if (!warping.compare(b)) {
+			warp_input = BS;
+		}
+		else {
+			std::cout << "Please input one kind of valid way for warping!" << endl;
+			std::cout << "Possible choice: TPS, BS" << endl;
+			return -1;
+		}
+	}
+
+	/*Image and features input*/
 	time_t timeBegin, timeEnd;
 	timeBegin = time(NULL);
 	
 	// Load source image with its features;
-	cv::String img_path_s = "D:\\value_analysis\\picture\\1.jpg";
+	cv::String img_path_s = "D:\\value_analysis\\picture\\1.jpg"; //img_source_path
 	// New a object to load the image;
 	image_inout img_io_s(img_path_s); 
 
@@ -30,7 +102,7 @@ int main() {
 	*/
 
 	// Load target image with its features;
-	cv::String img_path_t = "D:\\value_analysis\\picture\\2.jpg";
+	cv::String img_path_t = "D:\\value_analysis\\picture\\2.jpg"; //img_target_path
 	// New a object to load the image;
 	image_inout img_io_t(img_path_t);
 
@@ -110,28 +182,20 @@ int main() {
 	Matrix Mat_paras;
 	Mat_paras.Mat_set(paras); //2*71
 
-	//-----------2018.11.11 22:13 before here: right
+	//-----------2018.11.11 23:13 before here: right
 
 	int height_t = img_t.size().height;
 	int width_t = img_t.size().width;
 	int height_s = img_s.size().height;
 	int width_s = img_s.size().width;
 
-	enum inter_kind { nearest, bilinear, bicubic }inter_input = bicubic;
-	if (inter_input != nearest&&inter_input != bilinear&&inter_input != bicubic) {
-		std::cout << "Please input one kind of valid way for interpolate" << endl;
-		std::cout << "Possible choice: nearest, bilinear, bicubic" << endl;
-		return -1;
-	}
+
 
 	// Multiply the paras and locs to find the correspond location in source images
 	int fea_num = Mat_Fea_t[0].size();
 	for (int loc_i = 0; loc_i < height_t; loc_i++) {
 
 		for (int loc_j = 0; loc_j < width_t; loc_j++) {
-			if (loc_i % 100 == 0 && loc_j % 100 == 0) {
-				cout << "At " << loc_i << " and " << loc_j << endl;
-			}
 
 			// k<68 for every U(x,y)
 			std::vector<vector<double>> loc;
@@ -139,7 +203,7 @@ int main() {
 				double loc_x = Mat_Fea_t[1][k];
 				double loc_y = Mat_Fea_t[2][k];
 				double r2 = pow(loc_x - loc_i, 2) + pow(loc_y - loc_j, 2);
-				double U_r2 = r2*log(r2);
+				double U_r2 = U_calcu(r2);
 				std::vector<double> temp;
 				temp.push_back(U_r2);
 				loc.push_back(temp);
@@ -160,9 +224,9 @@ int main() {
 				case nearest: {
 					int loc_x = 0;
 					int loc_y = 0;
-					if (loc_x_double >= 0 && loc_x_double <= height_t + 1) (loc_x_double - floor(loc_x_double)) > 0.5 ? loc_x = floor(loc_x_double) : loc_x = floor(loc_x_double) + 1;
+					if (loc_x_double >= 0 && loc_x_double <= height_s + 1) (loc_x_double - floor(loc_x_double)) > 0.5 ? loc_x = floor(loc_x_double) : loc_x = floor(loc_x_double) + 1;
 					else loc_x = -1;
-					if (loc_y_double >= 0 && loc_y_double <= width_t + 1) (loc_y_double - floor(loc_y_double)) > 0.5 ? loc_y = floor(loc_y_double) : loc_y = floor(loc_y_double) + 1;
+					if (loc_y_double >= 0 && loc_y_double <= width_s + 1) (loc_y_double - floor(loc_y_double)) > 0.5 ? loc_y = floor(loc_y_double) : loc_y = floor(loc_y_double) + 1;
 					else loc_y = -1;
 
 					if (loc_x > height_s - 1 || loc_x < 0 || loc_y > width_s - 1 || loc_y < 0) {
@@ -224,13 +288,13 @@ int main() {
 						std::vector<double> delta_x;
 						double temp_x = loc_x_double - double(floor(loc_x_double));
 						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
-							delta_x.push_back(bicubic_weight(double(temp_x - loc_tem)));
+							delta_x.push_back(bicubic_weight(temp_x - double(loc_tem)));
 						}
 						
 						std::vector<double> delta_y;
 						double temp_y = loc_y_double - double(floor(loc_y_double));
 						for (int loc_tem = -1; loc_tem < 3; loc_tem++) {
-							delta_y.push_back(bicubic_weight(double(temp_y - loc_tem)));
+							delta_y.push_back(bicubic_weight(temp_y - double(loc_tem)));
 						}
 
 						cv::Vec3b value = Vec3b(0,0,0);
@@ -241,6 +305,12 @@ int main() {
 								// value[i,j] = delta_x[si]*delta_y[sj]*value[loc_x[si],loc_y[sj]];
 							}
 						}
+						if (value[0] < 0.0 || value[0] > 255.0) value[0] = 0;
+						else value[0] = int(value[0]);
+						if (value[1] < 0.0 || value[1] > 255.0) value[1] = 0;
+						else value[1] = int(value[1]);
+						if (value[2] < 0.0 || value[2] > 255.0) value[2] = 0;
+						else value[2] = int(value[2]);
 						img_t.at<Vec3b>(loc_i, loc_j) = value;
 					}
 					else {
@@ -277,6 +347,8 @@ int main() {
 		}
 	}
 
+	//-----------2018.11.12 11:13 before here: except bicubic right
+
 	timeEnd = time(NULL);
 	cout << "The total process time: " << timeEnd - timeBegin << endl;
 
@@ -287,6 +359,6 @@ int main() {
 	waitKey(3000);
 
 	// Save the altered image;
-	img_io_s.image_save(img_t);
+	img_io_s.image_save(img_t, img_path_t);
 
 }

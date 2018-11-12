@@ -47,11 +47,11 @@ Here, I will introduce the whole process of my code.
 
 It seems that I have finished most of the TPS work now at 2018.11.11. So now I have to list furthur work here.  
 
-+ Check the __Bicubic Way__, which seems to have some waves on the face and why?  
-+ Remove the black point on the image (the feature points creates a black hole!!!)  
-+ Change it to the command platte one, with users input intepolate way and the image path (or open a file searching window) and change the altered image's name with the target image index too  
-+ Rectangle the face area and only change this area and copy this face patch back to the image  
-+ Fasten the algorithm by use a new way for give value to image  
++ Check the __Bicubic Way__, which seems to have some waves on the face and why? - Do not know why??
++ Remove the black point on the image (the feature points creates a black hole!!!) - finished  
++ Change it to the command platte one, with users input intepolate way and the image path (or open a file searching window) and change the altered image's name with the target image index too - finished
++ Rectangle the face area and only change this area and copy this face patch back to the image - Not Needed  
++ Fasten the algorithm by use a new way for give value to image - Later
 
 Finish the before commands before __11.12 Night__  
 Later maybe:  

@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include "image_inout.h"
+#include "Utils.h"
 
 using namespace std;
 using namespace cv;
@@ -31,7 +32,6 @@ public:
 private:
 	std::vector<vector<double>> Mat_data;
 	std::vector<vector<double>> Mat_data_general;
-	double U_calcu(double r2);
 	void change_rows(int x);
 };
 

@@ -24,7 +24,7 @@ class image_inout
 public:
 	cv::Mat image_load();
 	std::vector<Location_fea> image_features_load();
-	void image_save(cv::Mat img_save);
+	void image_save(cv::Mat img_save, std::string img_path_t);
 	image_inout(cv::String path) : img_path(path) {
 		type_loc = img_path.find_first_of('.');
 		img_name = img_path.substr(0, type_loc);

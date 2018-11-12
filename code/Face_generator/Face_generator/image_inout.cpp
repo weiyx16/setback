@@ -44,9 +44,16 @@ std::vector<Location_fea> image_inout::image_features_load()
 }
 
 // Save the img_altered with a new file name
-void image_inout::image_save(cv::Mat img_save)
+void image_inout::image_save(cv::Mat img_save, std::string img_path_t)
 {
-	cv::String img_save_path = img_name + "_altered.jpg";
+	std::size_t loc_l = img_path_t.find_last_of('\\');
+	if (loc_l == -1){
+		loc_l = img_path_t.find_last_of('/');
+	}
+	std::size_t loc_h = img_path_t.find_last_of('.');
+	std::string img_t_name = img_path_t.substr(loc_l + 1, loc_h - loc_l - 1);
+
+	cv::String img_save_path = img_name + "_alteredby_" + img_t_name +".jpg";
 	std::cout << "Saving image to " << img_save_path << endl;
 	cv::imwrite(img_save_path, img_save);
 	std::cout << "Finished saving" << endl;

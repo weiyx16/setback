@@ -117,21 +117,21 @@ std::vector<double> Matrix::Mat_solve(std::vector<double> Mat_b)
 				//m = 1;
 				if (Mat_data_general[j][i] == 0)
 					continue;
-				m = abs(1.0 * Mat_data_general[i][i] / Mat_data_general[j][i]);
-
-				if (Mat_data_general[j][i]*Mat_data_general[i][i] > 0) flag = 1;
-				else flag = -1;
-				
-				for (int k = i; k < cols; k++) {
-					Mat_data_general[j][k] = Mat_data_general[j][k] * m - flag*Mat_data_general[i][k];
-				}
-				// directly get the notion?
-				/*
+				// directly get the notion			
 				m = 1.0 * Mat_data_general[i][i] / Mat_data_general[j][i];				
 				for (int k = i; k<cols; k++) {
 					Mat_data_general[j][k] = Mat_data_general[i][k] - Mat_data_general[j][k] * m ;
 				}
-				*/
+				
+				//m = abs(1.0 * Mat_data_general[i][i] / Mat_data_general[j][i]);
+
+				//if (Mat_data_general[j][i]*Mat_data_general[i][i] > 0) flag = 1;
+				//else flag = -1;
+				//
+				//for (int k = i; k < cols; k++) {
+				//	Mat_data_general[j][k] = Mat_data_general[j][k] * m - flag*Mat_data_general[i][k];
+				//}
+
 			}
 		}
 	}
@@ -215,16 +215,6 @@ std::vector<vector<double>> Matrix::Mat_return()
 	return Mat_data;
 }
 
-double Matrix::U_calcu(double r2)
-{
-	if (abs(r2) < 0.0001) {
-		return 0.0;
-	}
-	else {
-		return (r2*log(r2));
-	}
-}
-	
 void Matrix::stdFea2U(std::vector<Location_fea> fea_vector)
 {
 	int point_num = fea_vector.size();

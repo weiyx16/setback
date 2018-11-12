@@ -1,15 +1,15 @@
 ﻿  image_inout.cpp
   main.cpp
-main.cpp(94): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-main.cpp(128): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-main.cpp(163): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-main.cpp(165): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-main.cpp(195): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-main.cpp(196): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-main.cpp(197): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-main.cpp(198): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-main.cpp(257): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-main.cpp(259): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+main.cpp(166): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+main.cpp(195): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+main.cpp(230): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+main.cpp(232): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+main.cpp(262): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+main.cpp(263): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+main.cpp(264): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+main.cpp(265): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+main.cpp(330): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+main.cpp(332): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
   Matrix.cpp
 Matrix.cpp(15): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 Matrix.cpp(40): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
@@ -23,11 +23,11 @@ Matrix.cpp(157): warning C4267: “初始化”: 从“size_t”转换到“int�
 Matrix.cpp(187): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 Matrix.cpp(188): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 Matrix.cpp(189): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-Matrix.cpp(230): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+Matrix.cpp(220): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
   Utils.cpp
 Utils.cpp(12): warning C4804: “<”: 在操作中使用类型“bool”不安全
   正在生成代码
-  All 652 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 669 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   Face_generator.vcxproj -> D:\value_analysis\code\Face_generator\x64\Release\Face_generator.exe
   Face_generator.vcxproj -> D:\value_analysis\code\Face_generator\x64\Release\Face_generator.pdb (Full PDB)

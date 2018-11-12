@@ -15,3 +15,13 @@ double bicubic_weight(double distance) {
 		else return 0.0;
 	}
 }
+
+double U_calcu(double r2)
+{
+	if (fabs(r2) < 0.0001) {
+		return 0.0;
+	}
+	else {
+		return (r2*log(r2));
+	}
+}
