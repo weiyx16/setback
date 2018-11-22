@@ -22,8 +22,11 @@ struct Location_fea
 class image_inout
 {
 public:
+	// load img
 	cv::Mat image_load();
+	// load feature txt
 	std::vector<Location_fea> image_features_load();
+	// save img
 	void image_save(cv::Mat img_save, std::string img_path_t);
 	image_inout(cv::String path) : img_path(path) {
 		type_loc = img_path.find_first_of('.');

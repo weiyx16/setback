@@ -3,11 +3,6 @@
 using namespace std;
 using namespace cv;
 
-//TODO
-void Matrix::cvMat2stdMat(cv::Mat img_mat)
-{
-	
-}
 
 // 68*3 or 68*2
 void Matrix::stdFea2stdMat_v(std::vector<Location_fea> fea_vector, int with_one)
